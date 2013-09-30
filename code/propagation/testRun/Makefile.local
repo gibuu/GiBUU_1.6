@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL := scalarPot
+FILEEXCL := testCoulomb.f90 main.f90
+EXEFILE:= testCoulomb.f90 main.f90

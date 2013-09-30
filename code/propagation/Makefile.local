@@ -1,0 +1,3 @@
+SUBDIR :=
+SUBDIREXCL := testrun testRun
+FILEEXCL := tst.f90

@@ -1,0 +1,4 @@
+SUBDIR := 
+SUBDIREXCL :=  coll plot plot2 rho0 vacuum old
+FILEEXCL :=plot.f90 testInMediumRealPart.f90 testScaPot.f90 testSpecFunc.f90 testDeltaImag.f90 testNukWidth.f90 
+EXEFILE := testSpecFunc.f90 testInMediumWidth.f90 testRealPartMesons.f90 testSpecFuncMes.f90

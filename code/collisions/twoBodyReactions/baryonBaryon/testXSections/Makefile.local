@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL :=
+FILEEXCL := test_iifac.f90
+EXEFILE := test.f90

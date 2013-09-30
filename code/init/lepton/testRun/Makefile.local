@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL :=old
+FILEEXCL := test_kin.f90 
+EXEFILE := testRes.f90 test_helicity.f90

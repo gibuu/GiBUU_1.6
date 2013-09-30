@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL :=old
+FILEEXCL :=
+EXEFILE :=vecmes_test.f90 tabulate_matrixelem_saphir.f90

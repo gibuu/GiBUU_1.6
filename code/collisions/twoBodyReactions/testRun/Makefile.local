@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL :=
+FILEEXCL := test.f90 testMom.f90
+EXEFILE := CrossSectionPlotter.f90 CrossSectionPlotter2.f90

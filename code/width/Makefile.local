@@ -1,0 +1,3 @@
+SUBDIR :=
+SUBDIREXCL := buuinput deltaTest testRun testRun1 testRun_collWidth testRun_energyDet
+FILEEXCL :=

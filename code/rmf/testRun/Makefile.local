@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL :=
+FILEEXCL :=test_RMF.f90
+EXEFILE :=test_RMF.f90

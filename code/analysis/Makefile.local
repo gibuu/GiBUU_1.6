@@ -1,0 +1,3 @@
+SUBDIR := sourceAnalysis dls
+SUBDIREXCL := testRun root
+FILEEXCL :=

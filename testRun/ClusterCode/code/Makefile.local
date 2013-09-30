@@ -1,0 +1,8 @@
+SUBDIR :=\
+typeDefinitions\
+input\
+coalescence\
+smm
+
+FILEEXCL :=
+EXEFILE :=

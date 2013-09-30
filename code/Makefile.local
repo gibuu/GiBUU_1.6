@@ -1,0 +1,21 @@
+SUBDIR :=\
+analysis\
+collisions\
+database\
+density\
+init\
+inMediumWidth\
+inputOutput\
+numerics\
+potential\
+propagation\
+rmf\
+run\
+spectralFunctions\
+storage\
+typeDefinitions\
+width
+
+SUBDIREXCL :=
+FILEEXCL :=
+EXEFILE :=

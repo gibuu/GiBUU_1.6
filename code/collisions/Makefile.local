@@ -1,0 +1,3 @@
+SUBDIR := phaseSpace twoBodyReactions oneBodyReactions threeBodyReactions
+SUBDIREXCL := testRun Prelim
+FILEEXCL :=

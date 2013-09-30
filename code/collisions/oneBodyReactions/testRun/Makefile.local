@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL :=
+FILEEXCL :=main.f90 testAssignCharge.f90 testEtaPrime.f90 testEta.f90
+EXEFILE :=main.f90 testAssignCharge.f90 test_decayParticle.f90

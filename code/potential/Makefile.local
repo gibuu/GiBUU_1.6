@@ -1,0 +1,3 @@
+SUBDIR :=baryonWidth
+SUBDIREXCL := testRun
+FILEEXCL :=

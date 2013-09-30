@@ -1,0 +1,7 @@
+SUBDIR := lepton\
+photon\
+lowElectron\
+lowPhoton\
+neutrino
+SUBDIREXCL := testRun 
+FILEEXCL := 

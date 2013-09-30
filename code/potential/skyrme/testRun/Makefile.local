@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL := parameterSpace test2
+FILEEXCL := 
+EXEFILE:= skyrmePotential.f90 test_E_A.f90

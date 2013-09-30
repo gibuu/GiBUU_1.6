@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL := 
+FILEEXCL :=
+EXEFILE := testSpline.f90

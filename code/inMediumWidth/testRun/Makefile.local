@@ -1,0 +1,5 @@
+SUBDIR := 
+SUBDIREXCL := Width_massShift Width_no_massShift
+FILEEXCL := 
+EXEFILE := testInMediumRealPart.f90 tabulateRealPart.f90 testInMediumWidth.f90 tabulateImagPart.f90 testInMediumWidth_mesons.f90
+

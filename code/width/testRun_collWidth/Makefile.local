@@ -1,0 +1,4 @@
+SUBDIR := 
+SUBDIREXCL :=
+FILEEXCL := 
+EXEFILE := testInMediumWidth.f90

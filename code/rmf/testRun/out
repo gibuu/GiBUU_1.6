@@ -1,0 +1,15 @@
+
+------ Init "initDatabase": reading...
+  Set propagationSwitch to            0 .
+  Set usageForXsectionSwitch to            0 .
+------ Init "initDatabase": reading finished.
+
+ Printing baryon properties to file
+ Printing meson properties to file
+ Printing decay channels to file "DecayChannels.txt" 
+
+------ Init "RMF_input": reading...
+  Set RMF_flag to T .
+  Set N_set            2 .
+------ Init "baryonPotential": reading finished.
+

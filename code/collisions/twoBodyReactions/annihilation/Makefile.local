@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL := testRun
+FILEEXCL :=  
+

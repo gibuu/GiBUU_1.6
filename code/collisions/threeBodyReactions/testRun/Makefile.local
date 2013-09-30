@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL :=
+FILEEXCL := permult.f
+EXEFILE := test.f90

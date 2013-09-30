@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL := 
+FILEEXCL :=
+EXEFILE := test_um_tn.f90 

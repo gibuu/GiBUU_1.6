@@ -1,0 +1,3 @@
+SUBDIR := baryonBaryon HiEnergy baryonMeson annihilation
+SUBDIREXCL := testRun Pythia62
+FILEEXCL :=

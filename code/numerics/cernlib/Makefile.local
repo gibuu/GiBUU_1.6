@@ -1,0 +1,3 @@
+SUBDIR :=
+SUBDIREXCL := testRun_cauchy testRun_splines testRun_dzerox testRun_clebs
+FILEEXCL :=

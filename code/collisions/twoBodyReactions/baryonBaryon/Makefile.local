@@ -1,0 +1,4 @@
+SUBDIR :=
+SUBDIREXCL := testXSections testRun testXPT_model test_BYK
+FILEEXCL := crosw.f rescontr.f sigmabb.f
+
