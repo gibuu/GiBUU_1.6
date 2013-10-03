@@ -122,7 +122,7 @@ contains
     if (LesHouchesFinalParticles_Pert) then
        write(BUF,'(i8.8)') nCall
        call LesHouchesFileOpen(721,'LesHouches.Pert.'//trim(BUF)//'.xml')
-       call LesHouchesWriteEvents(721,pertPart)
+       call LesHouchesWriteEvents_pert(721,pertPart)
        call LesHouchesFileClose(721)
     end if
 
@@ -141,7 +141,7 @@ contains
     if (LesHouchesFinalParticles_Real) then
        write(BUF,'(i8.8)') nCall
        call LesHouchesFileOpen(722,'LesHouches.Real.'//trim(BUF)//'.xml')
-       call LesHouchesWriteEvents(722,realPart)
+       call LesHouchesWriteEvents_real(722,realPart)
        call LesHouchesFileClose(722)
     end if
 
@@ -212,13 +212,84 @@ contains
   end subroutine LesHouchesFileClose
 
 
-  !*************************************************************************
-  !****is* LesHouchesAnalysis/LesHouchesWriteEvents
+  !*****************************************************************************
+  !****is* LesHouchesAnalysis/LesHouchesWriteEvents_real
   ! NAME
-  ! subroutine LesHouchesWriteEvents (iFile, Parts)
+  ! subroutine LesHouchesWriteEvents_real (iFile, Parts)
   !
   ! PURPOSE
-  ! Do the actual printout
+  ! Do the actual printout for real particles.
+  !
+  ! NOTES
+  ! For the case of real particles, one event simply corresponds to one ensemble.
+  !*****************************************************************************
+  subroutine LesHouchesWriteEvents_real (iFile, Parts)
+    use particleDefinition
+    use ID_translation, only: KFfromBUU
+    use IdTable, only: EOV, NOP
+
+    integer,        intent(in)                         :: iFile
+    type(particle), intent(in), dimension(:,:), target :: Parts
+    
+    integer :: iEns,iPart, KF
+    integer, dimension(:), allocatable :: nParts
+
+    integer :: NUP,IDPRUP
+    real :: XWGTUP,SCALUP,AQEDUP,AQCDUP
+
+    character(len=15), parameter :: f1 = '(1P,2I6,4E14.6)'
+    character(len=22), parameter :: f2 = '(1P,I8,5I5,5E18.10,A6)'
+
+    IDPRUP = 0
+    XWGTUP = 1.0 ! weight of event
+    SCALUP = 0.0
+    AQEDUP = 0.0
+    AQCDUP = 0.0
+
+    allocate(nParts(1:size(Parts,dim=1)))
+    nParts=0
+
+    ! count particles per ensemble
+    do iEns = 1,size(Parts,dim=1)
+      do iPart = 1,size(Parts,dim=2)
+        if (Parts(iEns,iPart)%ID==EOV) exit
+        if (Parts(iEns,iPart)%ID==NOP) cycle
+        nParts(iEns) = nParts(iEns) + 1
+      end do
+    end do
+
+    ! Loop over all events and write them to file:
+    do iEns = 1,size(Parts,dim=1)
+       NUP = nParts(iEns) ! number of particles
+       if (NUP == 0) cycle
+
+       write(iFile,'(A)') '<event>'
+       write(iFile,f1) NUP,IDPRUP,XWGTUP,SCALUP,AQEDUP,AQCDUP
+
+       do iPart = 1,size(Parts,dim=2)
+         if (Parts(iEns,iPart)%ID==EOV) exit
+         if (Parts(iEns,iPart)%ID==NOP) cycle
+
+          KF = KFfromBUU (Parts(iEns,iPart))
+
+          write(iFile,f2) KF, 0, 0,0, 0,0, &
+                          Parts(iEns,iPart)%momentum(1:3), Parts(iEns,iPart)%momentum(0), &
+                          sqrts(Parts(iEns,iPart)), '0. 9.'
+       end do
+
+       write(iFile,'(A)') '</event>'
+    end do
+
+  end subroutine LesHouchesWriteEvents_real
+
+
+  !*****************************************************************************
+  !****is* LesHouchesAnalysis/LesHouchesWriteEvents_pert
+  ! NAME
+  ! subroutine LesHouchesWriteEvents_pert (iFile, Parts)
+  !
+  ! PURPOSE
+  ! Do the actual printout for perturbative particles.
   !
   ! NOTES
   ! We have to sort the particles according their "firstevent" field.
@@ -228,8 +299,8 @@ contains
   ! of eventtypes. Therefore we (ab)use the module "PILIndex", which 
   ! implements methods of "indexing". (We do not use the possibility of
   ! reallocating as provided by the module "PILIndex".)
-  !*************************************************************************
-  subroutine LesHouchesWriteEvents (iFile, Parts)
+  !*****************************************************************************
+  subroutine LesHouchesWriteEvents_pert (iFile, Parts)
     use particleDefinition
     use particlePointerListDefinition
     use particlePointerList, only: ParticleList_INIT, ParticleList_APPEND, ParticleList_CLEAR
@@ -416,7 +487,7 @@ contains
 
       end subroutine WriteAdditionalInfo
 
-  end subroutine LesHouchesWriteEvents
+  end subroutine LesHouchesWriteEvents_pert
 
 
 end module LesHouchesAnalysis
