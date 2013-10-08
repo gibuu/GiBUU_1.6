@@ -26,7 +26,7 @@ module initNeutrino
 
   public :: get_init_namelist
   public :: get_runtime_vars
-  public :: max_finalstate_ID, max_Hist, includeHist, K2Hist, numberOfExperiments,OSCLENGTH
+  public :: max_finalstate_ID, max_Hist, includeHist, K2Hist, numberOfExperiments,OSCLENGTH,OSC
 
 
 
@@ -129,7 +129,15 @@ module initNeutrino
   (/ 0.541, 0., 250., 0., 0.541, 735., 735., 810., 295., 0., 735., 735., &
      0.5, 0.5, 1300., 1300. /)
   ! oscillation length for various experiments in kilometers
-
+  
+  logical, dimension(1:numberOfExperiments), parameter:: OSC = &
+  (/ .FALSE.,.FALSE.,.TRUE.,.FALSE.,.FALSE.,.TRUE.,.TRUE.,.TRUE.,.TRUE.,&
+     .FALSE.,.TRUE.,.TRUE.,.FALSE.,.FALSE.,.TRUE.,.TRUE. /)
+  ! OSC is true for oscillation experiments, false otherwise
+  !   
+  
+  
+  
   !***************************************************************************
   !****g* initNeutrino/Enu_upper_cut
   ! SOURCE

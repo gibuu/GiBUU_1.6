@@ -12,7 +12,7 @@ module neutrinoAnalysis
   use histf90
   use hist2Df90
   use initNeutrino, only : max_Hist, includeHist, K2Hist, numberOfExperiments,&
-      get_init_namelist,OSCLENGTH
+      get_init_namelist,OSCLENGTH,OSC
 
 
   implicit none
@@ -1627,7 +1627,7 @@ contains
                    & (/0.,0./),(/maxEnu,maxEnu/),  (/binsizeEnu,binsizeEnu/))
 
               ! oscillations:  nu_mu survival, nu_e appearence
-              if (nuEXP>2 .and. nuExp.ne.4) then
+              if (OSC(nuEXP)) then
               call CreateHist(Oscmumu_enu_real(m,iHist),   'nu_mu survival versus true energy',0.,maxEnu,binsizeEnu)
               call CreateHist(Oscmumu_enu_rec(m,iHist) ,   'nu_mu survival versus reconstructed energy',0.,maxEnu,binsizeEnu)
               call CreateHist(Oscmuemax_enu_real(m,iHist), &
@@ -2893,7 +2893,7 @@ contains
 
               !! add oscillated muon disappearance  H_Enu_rec_muonDisappear
               !! add oscillated electron appearance for various CP violation phases
-              if (nuEXP>2 .and. (nuExp .ne. 4 .or. nuExp .ne. 11 .or. nuExp .ne. 12) ) then
+              if (OSC(nuEXP)) then
                   L=OSCLENGTH(nuEXP)
                   call oscillationProbability(Enureal,L,0.,Posc_mumu,Posc_mue,Posc_mue_max,Posc_mue_antimax)
 
@@ -2962,7 +2962,7 @@ contains
           if (.not.includeHist(iHist)) cycle
 
 
-       if (nuEXP>2 .and. (nuExp .ne. 4 .or. nuExp .ne. 11 .or. nuExp .ne. 12) ) then
+       if (OSC(nuEXP) ) then
 
        call writeHist(Oscmumu_enu_real(m,iHist), &
                     & file='oscillations_mumu_real_'//trim(filename1)//"."//trim(intToChar(iHist))//'.dat')
