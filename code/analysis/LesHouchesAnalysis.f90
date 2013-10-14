@@ -396,7 +396,7 @@ contains
     contains
 
       !*************************************************************************
-      !****is* LesHouchesWriteEvents/ValueListAllocate
+      !****is* LesHouchesWriteEvents_pert/ValueListAllocate
       ! NAME
       ! subroutine ValueListAllocate
       ! PURPOSE
@@ -440,7 +440,7 @@ contains
       end subroutine ValueListAllocate
 
       !*************************************************************************
-      !****is* LesHouchesWriteEvents/WriteAdditionalInfo
+      !****is* LesHouchesWriteEvents_pert/WriteAdditionalInfo
       ! NAME
       ! subroutine WriteAdditionalInfo(iFile,iFE)
       ! PURPOSE
