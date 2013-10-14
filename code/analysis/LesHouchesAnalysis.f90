@@ -1,13 +1,13 @@
-!***************************************************************************
+!*******************************************************************************
 !****m* /LesHouchesAnalysis
 ! NAME
 ! module LesHouchesAnalysis
 !
 ! PURPOSE
 ! This module provides routines for writing the outgoing particle
-! vector in the standard format according the "Les Houches Event Files".
+! vector in the standard format according to the "Les Houches Event Files".
 !
-! cf. http://arxiv.org/pdf/hep-ph/0609017v1
+! cf. http://arxiv.org/abs/hep-ph/0609017
 !
 ! INPUTS
 ! (none)
@@ -15,42 +15,35 @@
 ! NOTES
 ! These analysis routines are independent of the specific initialization
 ! and should work in principle for all event types.
-!
-!***************************************************************************
-
-!***************************************************************************
-!****n* LesHouchesAnalysis/LesHouches
-! PURPOSE
-! Namelist for LesHouchesAnalysis includes:
-! * LesHouchesFinalParticles_Pert
-! * LesHouchesFinalParticles_Real
-!***************************************************************************
-
+!*******************************************************************************
 module LesHouchesAnalysis
 
   implicit none
+  private
 
-  PRIVATE
-
-  !*************************************************************************
+  !*****************************************************************************
   !****g* LesHouchesAnalysis/LesHouchesFinalParticles_Pert
   ! SOURCE
   !
-  logical,save :: LesHouchesFinalParticles_Pert = .false.
+  logical, save :: LesHouchesFinalParticles_Pert = .false.
   !
   ! PURPOSE
-  ! flag: Print perturbative particle vector according LesHouches standard
-  !*************************************************************************
+  ! Flag to print the perturbative particle vector according to the "Les Houches"
+  ! standard, cf. http://arxiv.org/abs/hep-ph/0609017 .
+  ! The output will be written to LesHouches.Pert.xml
+  !*****************************************************************************
 
-  !*************************************************************************
+  !*****************************************************************************
   !****g* LesHouchesAnalysis/LesHouchesFinalParticles_Real
   ! SOURCE
   !
-  logical,save :: LesHouchesFinalParticles_Real = .false.
+  logical, save :: LesHouchesFinalParticles_Real = .false.
   !
   ! PURPOSE
-  ! flag: Print real particle vector according LesHouches standard
-  !*************************************************************************
+  ! Flag to print the real particle vector according to the "Les Houches"
+  ! standard, cf. http://arxiv.org/abs/hep-ph/0609017 .
+  ! The output will be written to LesHouches.Real.xml.
+  !*****************************************************************************
 
   logical, save :: init = .true.
 
@@ -58,18 +51,27 @@ module LesHouchesAnalysis
 
 contains
 
-  !*************************************************************************
+
+  !*****************************************************************************
   !****s* LesHouchesAnalysis/initInput
   ! NAME
   ! subroutine initInput
-  !
   ! PURPOSE
-  ! read namelist
-  !*************************************************************************
-  subroutine initInput()
-    use output
-    
-    NAMELIST /LesHouches/  LesHouchesFinalParticles_Pert, LesHouchesFinalParticles_Real
+  ! Read namelist 'LesHouches' from jobcard.
+  !*****************************************************************************
+  subroutine initInput
+    use output, only: Write_ReadingInput
+
+    !***************************************************************************
+    !****n* LesHouchesAnalysis/LesHouches
+    ! NAME
+    ! namelist /LesHouches/
+    ! PURPOSE
+    ! Namelist for LesHouchesAnalysis includes:
+    ! * LesHouchesFinalParticles_Pert
+    ! * LesHouchesFinalParticles_Real
+    !***************************************************************************
+    namelist /LesHouches/ LesHouchesFinalParticles_Pert, LesHouchesFinalParticles_Real
 
     integer :: ios
 
@@ -87,14 +89,14 @@ contains
 
   end subroutine initInput
 
-  !*************************************************************************
+
+  !*****************************************************************************
   !****s* LesHouchesAnalysis/DoLesHouchesAnalysis
   ! NAME
-  ! subroutine DoLesHouchesAnalysis
-  !
+  ! subroutine DoLesHouchesAnalysis (realPart, pertPart)
   ! PURPOSE
-  ! Do the actual writing out, if desired as in namelist
-  !*************************************************************************
+  ! Do the actual writing out, if desired (as indicated in namelist).
+  !*****************************************************************************
   subroutine DoLesHouchesAnalysis (realPart, pertPart)
     use particleDefinition
 
@@ -107,7 +109,7 @@ contains
 
     nCall = nCall+1
 
-    !*****************************************************************************
+    !***************************************************************************
     !****o* LesHouchesAnalysis/LesHouches.Pert.xml
     ! NAME
     ! file LesHouches.Pert.xml
@@ -118,7 +120,7 @@ contains
     !  * LesHouches.Pert.00000001.xml
     !  * LesHouches.Pert.00000002.xml
     !  * etc
-    !*****************************************************************************
+    !***************************************************************************
     if (LesHouchesFinalParticles_Pert) then
        write(BUF,'(i8.8)') nCall
        call LesHouchesFileOpen(721,'LesHouches.Pert.'//trim(BUF)//'.xml')
@@ -126,7 +128,7 @@ contains
        call LesHouchesFileClose(721)
     end if
 
-    !*****************************************************************************
+    !***************************************************************************
     !****o* LesHouchesAnalysis/LesHouches.Real.xml
     ! NAME
     ! file LesHouches.Real.xml
@@ -137,7 +139,7 @@ contains
     !  * LesHouches.Real.00000001.xml
     !  * LesHouches.Real.00000002.xml
     !  * etc
-    !*****************************************************************************
+    !***************************************************************************
     if (LesHouchesFinalParticles_Real) then
        write(BUF,'(i8.8)') nCall
        call LesHouchesFileOpen(722,'LesHouches.Real.'//trim(BUF)//'.xml')
@@ -148,15 +150,14 @@ contains
   end subroutine DoLesHouchesAnalysis
 
 
-  !*************************************************************************
+  !*****************************************************************************
   !****s* LesHouchesAnalysis/LesHouchesFileOpen
   ! NAME
   ! subroutine LesHouchesFileOpen (iFile, fName)
-  ! 
   ! PURPOSE
-  ! open a file for output event information according the 
+  ! Open a file for output event information according to the 
   ! "Les Houches Event Files" standard.
-  !*************************************************************************
+  !*****************************************************************************
   subroutine LesHouchesFileOpen (iFile, fName)
     integer, intent(in)       :: iFile
     character*(*), intent(in) :: fName
@@ -195,15 +196,13 @@ contains
   end subroutine LesHouchesFileOpen
 
 
-  !*************************************************************************
+  !*****************************************************************************
   !****s* LesHouchesAnalysis/LesHouchesFileClose
   ! NAME
-  !   subroutine LesHouchesFileClose (iFile)
-  ! 
+  ! subroutine LesHouchesFileClose (iFile)
   ! PURPOSE
-  ! open a file for output event information according the 
-  ! "Les Houches Event Files" standard.
-  !*************************************************************************
+  ! Close a file after outputting Les-Houches event information.
+  !*****************************************************************************
   subroutine LesHouchesFileClose (iFile)
     integer, intent(in)                 :: iFile
 
@@ -216,10 +215,8 @@ contains
   !****is* LesHouchesAnalysis/LesHouchesWriteEvents_real
   ! NAME
   ! subroutine LesHouchesWriteEvents_real (iFile, Parts)
-  !
   ! PURPOSE
   ! Do the actual printout for real particles.
-  !
   ! NOTES
   ! For the case of real particles, one event simply corresponds to one ensemble.
   !*****************************************************************************
@@ -287,10 +284,8 @@ contains
   !****is* LesHouchesAnalysis/LesHouchesWriteEvents_pert
   ! NAME
   ! subroutine LesHouchesWriteEvents_pert (iFile, Parts)
-  !
   ! PURPOSE
   ! Do the actual printout for perturbative particles.
-  !
   ! NOTES
   ! We have to sort the particles according their "firstevent" field.
   ! Therefore we allocate an array of "tParticleList". Unfortunately we can
@@ -400,14 +395,13 @@ contains
 
     contains
 
-      !*********************************************************************
+      !*************************************************************************
       !****is* LesHouchesWriteEvents/ValueListAllocate
       ! NAME
       ! subroutine ValueListAllocate
-      !
       ! PURPOSE
-      ! Do the allocation stuff for the Particle Info List
-      !*********************************************************************
+      ! Do the allocation stuff for the Particle Info List.
+      !*************************************************************************
       subroutine ValueListAllocate
 
         integer :: n0, n1,i
@@ -445,19 +439,18 @@ contains
 
       end subroutine ValueListAllocate
 
-      !*********************************************************************
+      !*************************************************************************
       !****is* LesHouchesWriteEvents/WriteAdditionalInfo
       ! NAME
       ! subroutine WriteAdditionalInfo(iFile,iFE)
-      !
       ! PURPOSE
-      ! Write additional info according the event.
+      ! Write additional info about the event.
       !
       ! This routine tries to find additional information about the event.
       ! It tries routines for different event types, which only return
       ! some information, if it was really stored.
       !
-      ! it uses:
+      ! It uses:
       ! * module "EventInfo_HiLep", EventInfo_HiLep_Get:
       !   If it finds something, then a line
       !     # 14 nu Q2 eps phiLepton Eventtype
@@ -466,9 +459,7 @@ contains
       !   If it finds something, then a line
       !     # 5 Eventtype Weight  momLepIn(0:3) momLepOut(0:3)
       !   is added (5 is the magic naumber for neutrino events)
-      ! 
-      !*********************************************************************
-
+      !*************************************************************************
       subroutine WriteAdditionalInfo(iFile,iFE)
         use EventInfo_HiLep, only: EventInfo_HiLep_Get
         use neutrinoProdInfo, only: NeutrinoProdInfo_Get
@@ -491,3 +482,4 @@ contains
 
 
 end module LesHouchesAnalysis
+
