@@ -574,13 +574,13 @@ contains
           if (.not.TheSource(m,i)%status) cycle
 
           if(.not.hyperSource) then
-             write(105,100) time,& 
+             write(103,100) time,& 
                   & TheSource(m,i)%Size,TheSource(m,i)%Charge, &
                   & TheSource(m,i)%position,TheSource(m,i)%velocity, & 
                   & TheSource(m,i)%ExEnergy,TheSource(m,i)%radEnergy,& 
                   & stossParameter,m,isut+1
           else
-             write(105,102) time,& 
+             write(103,102) time,& 
                   & TheSource(m,i)%Size,TheSource(m,i)%Charge, &
                   & TheSource(m,i)%nLambda,TheSource(m,i)%nSigma0, &
                   & TheSource(m,i)%position,TheSource(m,i)%velocity, & 
