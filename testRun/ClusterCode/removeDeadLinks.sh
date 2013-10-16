@@ -1,1 +1,1 @@
-../../removeDeadLinks.sh
+../../scripts/removeDeadLinks.sh

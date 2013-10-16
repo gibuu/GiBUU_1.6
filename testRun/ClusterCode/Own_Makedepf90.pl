@@ -1,1 +1,1 @@
-../../Own_Makedepf90.pl
+../../scripts/Own_Makedepf90.pl
