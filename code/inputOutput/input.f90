@@ -345,7 +345,17 @@ contains
     logical :: ex
 
     call Write_ReadingInput("input",0)
-    rewind(5)
+    rewind(5,IOSTAT=ios)
+    if (ios /= 0) then
+      write(*,*)
+      write(*,*) "Rewind error: Maybe you forgot to provide a jobcard?"
+      write(*,*) "The input jobcard file needs to be piped into the GiBUU executable like this:"
+      write(*,*) "./GiBUU.x < jobcard"
+      write(*,*) "Furthermore, you can redirect the output of GiBUU into a log file if desired:"
+      write(*,*) "./GiBUU.x < jobcard > log.txt"
+      write(*,*)
+      stop
+    end if
     read(5,nml=input,IOSTAT=ios)
     call Write_ReadingInput("input",0,ios)
     if (ios /= 0) then
