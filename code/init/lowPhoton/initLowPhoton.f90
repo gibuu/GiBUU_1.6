@@ -132,7 +132,7 @@ module initLowPhoton
   logical,save  :: onlyDelta=.false.
   !
   ! PURPOSE
-  ! Switch for including only delta resonance
+  ! Switch for including only the Delta resonance.
   !**********************************************************
 
   !**********************************************************
@@ -141,7 +141,7 @@ module initLowPhoton
   logical,save  :: onlyDelta_not=.false.
   !
   ! PURPOSE
-  ! Switch for excluding only delta resonance
+  ! Switch for excluding only the Delta resonance.
   !**********************************************************
 
   !**********************************************************
@@ -150,16 +150,16 @@ module initLowPhoton
   !
   logical, save :: debugFlag=.false.
   ! PURPOSE
-  ! To switch on debugging information
+  ! To switch on debugging information.
   !**********************************************************
 
   !**********************************************************
   !****g* initLowPhoton/energy_gamma
   ! SOURCE
   !
-  real, save :: energy_gamma=0.
+  real, save :: energy_gamma = 0.
   ! PURPOSE
-  ! Energy of incoming photon
+  ! Energy of incoming photon in nucleus rest frame (in GeV).
   !**********************************************************
 
   !**********************************************************
@@ -1427,7 +1427,7 @@ contains
       ! Columns:
       !  * 1    : E_gamma [Gev]
       !  * 2    : sqrt(s) [GeV]
-      !  * 3    : total cross section [mb]
+      !  * 3    : total cross section [microbarn]
       !  * 4    : sum of all resonances
       !  * 5-7  : exclusive pi-, pi0, pi+
       !  * 8-11 : 2pi
@@ -1447,7 +1447,7 @@ contains
       ! Columns:
       !  * 1 : E_gamma [Gev]
       !  * 2 : sqrt(s) [GeV]
-      !  * 3-63: resonance cross sections [mb]
+      !  * 3-63: resonance cross sections [microbarn]
       !*******************************************************************
       write (301,'(63G13.6)') energy_gamma, srts, res(1:nbar)
 
