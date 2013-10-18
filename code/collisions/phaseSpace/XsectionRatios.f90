@@ -462,11 +462,6 @@ contains
 
           if( hadron(finalState(i)%Id)%strangeness .ne. 0 ) nStrangeMeson = nStrangeMeson + 1
 
-       else
-
-          print *,"ERROR in XsectionRatios/accept_event: ",pair%ID,"->",finalState%ID
-          stop
-
        end if
 
     end do
@@ -761,9 +756,15 @@ contains
                       &                finalState(i)%momentum(1:3) )
        mstar_final(i) = sqrt( max(0.,mstar_final(i)) )
     end do
-    ratio1=Ratio(sqrtsStar,(/mstar(1:2),mstar_final(1:nFinal)/),&
-                &(/pair(1:2)%mass,finalState(1:nFinal)%mass/))     
 
+    if(2.le.nFinal .and. nFinal.le.6) then
+        ratio1=Ratio(sqrtsStar,(/mstar(1:2),mstar_final(1:nFinal)/),&
+                    &(/pair(1:2)%mass,finalState(1:nFinal)%mass/))
+    else
+        accept_event = .true.
+        return
+    end if
+        
     factor = ratio1 / ratio_ini
 
     if( factor > 1 ) then
@@ -1269,7 +1270,7 @@ contains
     real, intent(in) :: srtsStar                  ! c.m. energy (GeV),
     real, intent(in), dimension(:) :: mStar, mass ! Dirac and vacuum masses of all particles (GeV)
 
-    integer :: n
+    integer :: i,n
     real :: srts, Ifac, IfacStar, phaseSpace, phaseSpaceStar
 
     n = size(mStar,dim=1)
@@ -1308,9 +1309,13 @@ contains
     phaseSpaceStar = integrate_nBodyPS(srtsStar,mStar(3:n))
 
     ! Cross section ratio = sigma_med / sigma_vac:
-    Ratio = mStar(1)*mStar(2)*mStar(3)*mStar(4)/(mass(1)*mass(2)*mass(3)*mass(4)) &
-            * Ifac/IfacStar * phaseSpaceStar/phaseSpace
-
+    if(IfacStar.gt.0. .and. phaseSpace.gt.0.) then
+        Ratio = mStar(1)*mStar(2)/(mass(1)*mass(2)) &
+              & *Ifac/IfacStar * phaseSpaceStar/phaseSpace
+        do i = 3,n
+           if(mass(i).gt.0.) Ratio = Ratio * mStar(i)/mass(i)
+        end do
+    end if
 
   end function Ratio
 
