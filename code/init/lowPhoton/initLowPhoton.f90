@@ -1417,38 +1417,38 @@ contains
         fr = 0.
       end if
 
-      !*******************************************************************
+      !*************************************************************************
       !****o* initLowPhoton/lowPhoton_XS.dat
       ! NAME
       ! file lowPhoton_XS.dat
       ! PURPOSE
-      ! Contains various photoproduction cross sections.
+      ! Contains various photoproduction cross sections per nucleon (without FSI).
       ! PURPOSE
       ! Columns:
       !  * 1    : E_gamma [Gev]
       !  * 2    : sqrt(s) [GeV]
-      !  * 3    : total cross section [microbarn]
+      !  * 3    : total cross section [microbarn/A]
       !  * 4    : sum of all resonances
       !  * 5-7  : exclusive pi-, pi0, pi+
       !  * 8-11 : 2pi
       !  * 12-20: vector mesons
       !  * 21   : pi0 eta
       !  * 22   : Fritiof
-      !*******************************************************************
+      !*************************************************************************
       write (300,'(26G13.6)') energy_gamma, srts, integral, sum(res), onepi(-1:1), sig2pi(0:3), sigVM(0:8), sig_pi0eta, fr
 
-      !*******************************************************************
+      !*************************************************************************
       !****o* initLowPhoton/lowPhoton_XS_res.dat
       ! NAME
       ! file lowPhoton_XS_res.dat
       ! PURPOSE
-      ! Contains the resonance photoproduction cross sections.
+      ! Contains the resonance photoproduction cross sections per nucleon (without FSI).
       ! PURPOSE
       ! Columns:
       !  * 1 : E_gamma [Gev]
       !  * 2 : sqrt(s) [GeV]
-      !  * 3-63: resonance cross sections [microbarn]
-      !*******************************************************************
+      !  * 3-63: resonance cross sections [microbarn/A]
+      !*************************************************************************
       write (301,'(63G13.6)') energy_gamma, srts, res(1:nbar)
 
       close(300)
