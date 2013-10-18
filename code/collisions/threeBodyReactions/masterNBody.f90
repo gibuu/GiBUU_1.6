@@ -354,13 +354,14 @@ contains
   use preEventDefinition
   use master_2Body, only: XsectionMaster, XsectionCutOff, setKinematics, setKinematicsHiEnergy
   use twoBodyStatistics, only : sqrts_distribution
-  use IdTable, only: isMeson, isBaryon
+  use IdTable, only: isMeson, isBaryon, pion
   use propagation, only : updateVelocity, checkVelo
   use nBodyPhaseSpace, only : momenta_in_3BodyPS
   use RMF, only : getRMF_flag
   use energyCalc, only : energyCorrection
   use XsectionRatios, only : accept_event
   use mediumModule, only: mediumAt,getMediumCutOff
+  use Annihilation, only : annihilate
 
   type(particle), dimension(1:3) ,intent(in) :: particles  ! Incoming particles
   type(particle), dimension(:) :: finalState ! outgoing particles
@@ -492,22 +493,17 @@ contains
   ! Determine the total and elastic cross sections for the collision of 1 and 2
   ! and also the "preevent" (in case of low energy collision):
 
-  if( .not.getRMF_flag() ) then
-
-     call XsectionMaster(sqrts_12,(/particle1,particle2/),mediumATcollision,momentum_LRF_12,&
-                        &chosenEvent,sigmaTot,sigmaElast,sigmaCEX,sigmaAnni,sigmaLbar,&
-                        &sigmaSbar,sigmaXiBar,sigmaJPsi,HiEnergyFlag)
-
-  else
-
-     sqrtS_corr = sqrts_12 - mstar1 - mstar2 + particle1%mass + particle2%mass
-
-
-     call XsectionMaster(sqrtS_corr,(/particle1,particle2/),mediumATcollision,momentum_LRF_12,&
-                        &chosenEvent,sigmaTot,sigmaElast,sigmaCEX,sigmaAnni,sigmaLbar,&
-                        &sigmaSbar,sigmaXiBar,sigmaJPsi,HiEnergyFlag)
-
+  if(.not.getRMF_flag()) then
+      ! Here we assume that calculation is done without mean field at all
+      sqrtS_corr = sqrts_12
+  else 
+      sqrtS_corr = sqrts_12 - mstar1 - mstar2 + particle1%mass + particle2%mass
   end if
+
+
+  call XsectionMaster(sqrtS_corr,(/particle1,particle2/),mediumATcollision,momentum_LRF_12,&
+                     &chosenEvent,sigmaTot,sigmaElast,sigmaCEX,sigmaAnni,sigmaLbar,&
+                     &sigmaSbar,sigmaXiBar,sigmaJPsi,HiEnergyFlag)
 
   if (debug) write (*,*) 'Xsections:', sigmaTot, sigmaElast, HiEnergyFlag
 
@@ -535,26 +531,38 @@ contains
 
   If(.not.HiEnergyFlag) then
 
-     call ResetPosition ! This also sets maxId
+     if( isBaryon(particle1%Id) .and. isBaryon(particle2%Id) .and. &
+            & (particle1%antiParticle.neqv.particle2%antiParticle) .and. &
+            & finalState(1)%Id.eq.pion .and. finalState(2)%Id.eq.pion .and.&
+            & finalState(3)%Id.eq.pion )                  then   ! Simulate annihilation
 
-     HiEnergyType=0
+          if(particle1%antiParticle) then
+             call annihilate(particle1,particle2,time,finalState,collisionFlag,HiEnergyType)
+          else
+             call annihilate(particle2,particle1,time,finalState,collisionFlag,HiEnergyType)
+          end if
 
-     if( .not.getRMF_flag() ) then    
+          If(.not.collisionFlag) return
 
-         ! Here we assume that calculation is done without mean field, thus vacuum sqrts_12 is used
-         ! on place of full srts (1-st arg.):
+          call ResetPosition ! This also sets maxId
 
-         call setKinematics(sqrts_12,sqrts_12,betaToLRF,betacm_12,mediumAtCollision,&
-                           (/particle1,particle2/),finalState(1:maxID),collisionFlag)
+          HiEnergyFlag=.true.   ! Bad trick to avoid charge check after annihilation
+          ! (unfortunately charge is not always conserved by annihilate)
 
      else
 
-         call setKinematics(sqrts_12,sqrtS_corr,betaToLRF,betacm_12,mediumAtCollision,&
-                           (/particle1,particle2/),finalState(1:maxID),collisionFlag)
+          call ResetPosition ! This also sets maxId
+
+          HiEnergyType=0
+
+          call setKinematics(sqrts_12,sqrtS_corr,betaToLRF,betacm_12,mediumAtCollision,&
+                             (/particle1,particle2/),finalState(1:maxID),collisionFlag)
+
+          If(.not.collisionFlag) return
 
      end if
 
-     If(.not.collisionFlag) return
+
 
   else
 
