@@ -264,7 +264,10 @@ contains
       !*******************************************************************
 
       ! Check that there are open channels
-      If (sigmaTot < 0.0001) return
+      If (sigmaTot < 0.0001) then
+         sigmaTot=0.
+         return
+      end if
 
       do
          x = rn()*sigmaTot
