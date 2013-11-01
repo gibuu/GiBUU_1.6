@@ -433,12 +433,10 @@ contains
 
             MassNorm(isSource) = MassNorm(isSource) + ParticleVector(m,l)%mass
 
-            !for spectators: determine their radial flows in the local rest frame. 
-            ! this serves as check, i.e. spectators do not experience radial expansion.
             if (present(projectileNuc)) then !make sence only for HeavyIon-runs.
-               if (isSource .le. 2) then
-                  teilchenLRF = ParticleVector(m,l)
-                  call boostToLRF(teilchenLRF,1)
+               if (isSource .le. 2) then !spectators do not experience radial expansion.
+                  teilchenLRF%momentum(1:3) = 0.0 !force it to 0
+                  teilchenLRF%momentum(0) = ParticleVector(m,l)%mass !just to not divide below by 0
                else 
                   teilchenLRF = ParticleVector(m,l)
                endif
