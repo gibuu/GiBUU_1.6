@@ -342,7 +342,7 @@ contains
     case(1,4)
 
        ! Lambda + N --> Lambda + N
-       if (plab > 0.1 .and. plab < 0.87) then
+       if (plab < 0.87) then
           xsectionYN = 12.2*plab**(-1.42)
        else if (plab > 0.87) then
           xsectionYN = 14.4*plab**(-0.12)
@@ -352,7 +352,7 @@ contains
 
        ! Lambda + N --> Sigma0 + N  (ichan==3,6)
        !       if (plab < 0.436) then
-       if (plab > 0.625 .and. plab < 0.8) then
+       if (plab < 0.8) then
           xsectionYN = 30.*plab**(4.9)
        else if (plab > 0.8 .and. plab < 1.206) then
           xsectionYN = 5.7*plab**(-2.5) !orig.
@@ -387,7 +387,7 @@ contains
 
        ! Sigma- + Proton  --> Sigma0 + Neutron (ichan==15)
        ! Sigma+ + Neutron --> Sigma0 + Proton  (ichan==20)
-       if (plab > 0.1) xsectionYN = 13.5*plab**(-1.25)
+       xsectionYN = 13.5*plab**(-1.25)
 
        if (ichan==9 .or. ichan==11) then
          ! Sigma0 + Proton  --> Sigma+ + Neutron (ichan==9)
@@ -406,13 +406,13 @@ contains
 
        ! Sigma- + Proton  --> Lambda + Neutron (ichan==14)
        ! Sigma+ + Neutron --> Lambda + Proton  (ichan==19)
-       if (plab > 0.1) xsectionYN = 13.2*plab**(-1.18)
+       xsectionYN = 13.2*plab**(-1.18)
 
     case(16,17)
 
        ! Sigma- + Neutron --> Sigma- + Neutron (ichan==16)
        ! Sigma+ + Proton  --> Sigma+ + Proton  (ichan==17)
-       if (plab > 0.15) xsectionYN = 38.*plab**(-0.62)
+       xsectionYN = 38.*plab**(-0.62)
 
     ! Xi Nucleon channels:
 
