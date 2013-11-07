@@ -333,6 +333,8 @@ contains
 
     p_ab = pCM (srts, M_Nuc, M_Hyp)  ! needed for detailed balance
 
+    xsectionYN = 0.
+
     select case (ichan)
 
     ! Lambda/Sigma + Nucleon channels:
@@ -340,30 +342,22 @@ contains
     case(1,4)
 
        ! Lambda + N --> Lambda + N
-       if (plab < 0.1) then
-          xsectionYN = 0.0
-       else if (plab > 0.1 .and. plab < 0.87) then
+       if (plab > 0.1 .and. plab < 0.87) then
           xsectionYN = 12.2*plab**(-1.42)
-       else if (plab > 0.87 .and. plab < 2.5) then
+       else if (plab > 0.87) then
           xsectionYN = 14.4*plab**(-0.12)
-       else
-          xsectionYN = 0.0
        endif
 
     case(2,3,5,6,8,12)
 
        ! Lambda + N --> Sigma0 + N  (ichan==3,6)
        !       if (plab < 0.436) then
-       if (plab < 0.625) then
-          xsectionYN = 0.0
-       else if (plab > 0.625 .and. plab < 0.8) then
+       if (plab > 0.625 .and. plab < 0.8) then
           xsectionYN = 30.*plab**(4.9)
        else if (plab > 0.8 .and. plab < 1.206) then
           xsectionYN = 5.7*plab**(-2.5) !orig.
-       else if (plab > 1.206 .and. plab < 2.5) then
-          xsectionYN = 9.9456-10.254*plab+4.1135*plab**2
-       else
-          xsectionYN = 0.0
+       else if (plab > 1.206) then
+          xsectionYN = min (19., 9.9456-10.254*plab+4.1135*plab**2)
        endif
 
        if (ichan==2 .or. ichan==5) then
@@ -393,11 +387,7 @@ contains
 
        ! Sigma- + Proton  --> Sigma0 + Neutron (ichan==15)
        ! Sigma+ + Neutron --> Sigma0 + Proton  (ichan==20)
-       if (plab > 0.1 .and. plab < 2.5) then
-          xsectionYN = 13.5*plab**(-1.25)
-       else
-          xsectionYN = 0.0
-       endif
+       if (plab > 0.1) xsectionYN = 13.5*plab**(-1.25)
 
        if (ichan==9 .or. ichan==11) then
          ! Sigma0 + Proton  --> Sigma+ + Neutron (ichan==9)
@@ -416,21 +406,13 @@ contains
 
        ! Sigma- + Proton  --> Lambda + Neutron (ichan==14)
        ! Sigma+ + Neutron --> Lambda + Proton  (ichan==19)
-       if (plab > 0.1 .and. plab < 2.5) then
-          xsectionYN = 13.2*plab**(-1.18)
-       else
-          xsectionYN = 0.0
-       endif
+       if (plab > 0.1) xsectionYN = 13.2*plab**(-1.18)
 
     case(16,17)
 
        ! Sigma- + Neutron --> Sigma- + Neutron (ichan==16)
        ! Sigma+ + Proton  --> Sigma+ + Proton  (ichan==17)
-       if (plab > 0.15 .and. plab < 2.5) then
-          xsectionYN = 38.*plab**(-0.62)
-       else
-          xsectionYN = 0.0
-       endif
+       if (plab > 0.15) xsectionYN = 38.*plab**(-0.62)
 
     ! Xi Nucleon channels:
 
@@ -448,11 +430,7 @@ contains
              
     case(24)
        ! Xi N --> Sigma Lambda (I=1)
-       if (pmev < 590.) then
-          xsectionYN = 0.0
-       else
-          xsectionYN = 4.626*(pmev/590.+1.)**(-0.604771)
-       endif
+       if (pmev > 590.) xsectionYN = 4.626*(pmev/590.+1.)**(-0.604771)
 
     end select
 
