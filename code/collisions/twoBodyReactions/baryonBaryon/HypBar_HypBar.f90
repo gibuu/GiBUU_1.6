@@ -341,10 +341,10 @@ contains
 
     case(1,4)
 
-       ! Lambda + N --> Lambda + N
-       if (plab < 0.87) then
-          xsectionYN = 12.2*plab**(-1.42)
-       else if (plab > 0.87) then
+       ! Lambda + N --> Lambda + N   (parametrization by Oliver Arnold, following Rijken et al, PRC 59, 21-40, 1999)
+       if (plab < 0.4) then
+         xsectionYN = 203.56*exp(-14.47*plab**2) + 253.88*exp(-76.19*plab**2)
+       else
           xsectionYN = 14.4*plab**(-0.12)
        endif
 
