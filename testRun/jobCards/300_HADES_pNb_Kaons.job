@@ -16,13 +16,10 @@
       eventtype       =         300 ! hadron induced
       numEnsembles    =        1000
       numTimeSteps    =         300
+      delta_T         =         0.2 ! time step size [fm]
       num_runs_SameEnergy=       10 ! number of runs per energy
 
-      time_max        =        60.0 !
-      timeForOutput   =        10.0 ! 
-
-!      DoPrLevel(1) = .FALSE.
-!      DoPrLevel(2) = .FALSE.
+!      DoPrLevel(1:2) = .FALSE., .FALSE.
 
       path_To_Input   = '~/GiBUU/buuinput'
 /
@@ -69,16 +66,6 @@
 /
 
 
-! file: code/database/particleProperties.f90
-&initDatabase
-      propagationSwitch = 0 ! 0=all resonances with more than 1 star
-/
-
-! file: code/numerics/random.f90
-&initRandom
-      SEED=23459                ! Seed for the random number
-/
-
 ! file: code/density/density.f90
 &initDensity
       splineExtrapolation     = F
@@ -100,31 +87,11 @@
       fact_kaon       =  0.333333    
 /
 
-! file: code/analysis/sourceAnalysis_Main.f90
-&SMM_input
-      MaxTimePrinting = 1000 ! number of times output is written
-/
-
 ! file: code/collisions/collisionTerm.f90
 &collisionterm
       threeBodyProcesses = F
       energyCheck        =  0.100
       maxOut             =     30
-      annihilationTime   =  0.000
-/
-
-! file: code/collisions/twoBodyReactions/master_2Body.f90
-&master_2body
-      HiEnergyThresholdBarBar = 5.000
-      smoothHiEnergy          = F
-      coarse                  = 4.500, 4.500, 4.000
-      bmax_nucleonNucleon     = 4.500
-      bmax_baryonMeson        = 4.500
-/
-
-! file: code/analysis/HeavyIonAnalysis.f90
-&HICanalysis_Input
-      flag_outputDetailed     = T
 /
 
 ! file: code/collisions/phaseSpace/winkelVerteilung.f90
@@ -133,17 +100,3 @@
       rho_pipi_nonIsotropic   = F
       pionNucleon_backward    = F
 /
-
-! file: code/propagation/propagation.f90
-&Propagation
-      UseCoulomb              = F
-      UseHadronic             = F
-      predictorCorrector      = F
-/
-
-! file: code/collisions/insertion.f90
-&insertion
-      minimumEnergy   =  0.000
-/
-
-
