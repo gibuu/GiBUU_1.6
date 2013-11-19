@@ -56,11 +56,11 @@
 !       Potentials
 !*******************************************************************************
 
-$propagation
+&propagation
   predictorCorrector = .false.
   UseCoulomb         = .false.
   UseHadronic        = .false.
-$end
+/
 
 !*******************************************************************************
 !       Collision Term :
