@@ -405,6 +405,7 @@ contains
       use mediumDefinition, only: vacuum
       use preEventDefinition
       use master_2Body, only: XsectionMaster
+      use constants, only: pi
       
       type(particle),dimension(1:2)    :: pair
       real :: srts, sigmaTot,sigmaElast,sigmaCEX,sigmaAnni
@@ -419,8 +420,8 @@ contains
       call XsectionMaster(srts,pair,vacuum,momentumLRF,finalState,sigmaTot,sigmaElast,&
                          &sigmaCEX,sigmaAnni,sigmaLbar,sigmaSbar,sigmaXiBar,sigmaJPsi,HiFlag)
 
-      b0 = sqrt(sigmaTot/31.4)
-      AdjustImpact = b0 + 0.2
+      b0 = sqrt(sigmaTot/(10.*pi))
+      AdjustImpact = b0
       
     end function AdjustImpact
     
