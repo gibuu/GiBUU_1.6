@@ -452,13 +452,17 @@ contains
   ! * For eventtype "heavyIon", the following line is added:
   !     # 1 b
   !   (1 is the magic number of "heavyIon", b is the impact parameter in fm)
+  ! * For eventtype "hadron", the following line is added:
+  !     # 300 b
+  !   (300 is the magic number of "hadron", b is the impact parameter in fm)
   !*****************************************************************************
   subroutine WriteAdditionalInfo (iFile, iFE)
     use EventInfo_HiLep, only: EventInfo_HiLep_Get
     use neutrinoProdInfo, only: NeutrinoProdInfo_Get
     use inputGeneral, only: eventType
-    use eventtypes, only: hiLepton, neutrino, heavyIon
-    use initHeavyIon, only: b
+    use eventtypes, only: hiLepton, neutrino, heavyIon, hadron
+    use initHeavyIon, only: b_HI => b
+    use initHadron, only: b_had => b
 
     integer, intent(in) :: iFile
     integer, intent(in), optional :: iFE
@@ -469,7 +473,9 @@ contains
 
     select case (eventType)
     case (heavyIon)
-      write(iFile,'(A,ES13.4)') '# 1 ', b
+      write(iFile,'(A,ES13.4)') '# 1 ', b_HI
+    case (hadron)
+      write(iFile,'(A,ES13.4)') '# 300 ', b_had
     case (neutrino)
       if (.not. present(iFE)) return
       if (NeutrinoProdInfo_Get (iFE,evtType,Weight,momLepIn,momLepOut,momBos)) &
