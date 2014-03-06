@@ -526,7 +526,7 @@ contains
   subroutine DoHeavyIonAnalysisTime (realPV, time, delta_T)
     use particleDefinition
     use inputGeneral, only : time_max,timeForOutput,timeSequence,eventtype
-    use output, only : realTochar
+    use output, only : intTochar
     use initHeavyIon, only : b_HI => b
     use initHadron,   only : b_had => b
     use eventtypes, only: HeavyIon, hadron
@@ -538,38 +538,47 @@ contains
     real             :: stossParameter,emass,p2
     integer, save    :: isut=0 !number of subsequent runs
     integer, save    :: itime=0
-    logical, save    :: firstCall=.true.
 
+    if (time==0.) itime=0
 
-    if (time==0.) then
+    if (time>= timeForOutput) then
 
-       call writeParticleVector
-       call RapiditySpectra
-
-    else
-
-       if ((time+0.0001).ge.timeForOutput) then
-
-          itime = itime + 1
-
-          if (itime==int(timeSequence/delta_T) .or. firstCall ) then
-             call writeParticleVector
-             call RapiditySpectra
-             firstCall=.false.
-             itime = 0
-          endif
-
-       end if
+      if (mod(itime*delta_T,timeSequence)<1E-4) then
+        call writeParticleVector
+        call RapiditySpectra
+      endif
+          
+      itime = itime + 1
 
     end if
 
-    if (abs(time-time_max) < 0.0001) isut = isut + 1 !number of subsequent runs
+    if (abs(time-time_max) < 1E-4) isut = isut + 1
 
   contains
 
     subroutine writeParticleVector
 
-      open(103,file='DoHIATime'//realTochar(time+1.e-06)//'fmc.dat',position='Append')
+      !*************************************************************************
+      !****o* HeavyIonAnalysis/DoHIATime___.dat
+      ! NAME
+      ! file DoHIATime___.dat
+      ! PURPOSE
+      ! Contains the full dump of the real particle vector at a certain time step.
+      ! The time step number is given in the file name and the actual time is
+      ! in the first line of the file.
+      ! The columns have the following meaning:
+      ! * 1    = particle ID
+      ! * 2    = charge
+      ! * 3    = vac. mass in GeV
+      ! * 4    = eff. mass in GeV
+      ! * 5    = isFree (particle is bound or free?)
+      ! * 6-8  = position (x,y,z) in fm
+      ! * 9-11 = momentum (px,py,pz) in GeV
+      ! * 12   = ensemble no.
+      ! * 13   = run no.
+      ! * 14   = impact parameter in fm
+      !*************************************************************************
+      open(103,file='DoHIATime'//intToChar(nint(time/delta_T))//'.dat',position='Append')
       if (isut==0) then
          write(103,*) '# time = ',time,' fm/c'
          write(103,*)
@@ -645,7 +654,7 @@ contains
       dndy(:) = 0.0
       dndy2(:) = 0.0
 
-      open(203,file='RapidityDistributions'//realTochar(time+1.e-06)//'fmc.dat',position='Append')
+      open(203,file='RapidityDistributions'//intTochar(nint(time/delta_T))//'.dat',position='Append')
       if (isut==0) then
          write(203,*) '# time = ',time,' fm/c'
          write(203,*)
