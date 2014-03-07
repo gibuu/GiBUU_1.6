@@ -60,6 +60,60 @@ contains
   end subroutine readInput
 
 
+  !*****************************************************************************
+  !****f* resonanceCrossSections/resonanceMass
+  ! NAME
+  ! real function resonanceMass (ID, charge, media, FourMomentum, position, perturbative)
+  ! PURPOSE
+  ! Determines the bare (vacuum) mass of a resonance,
+  ! if its 4-momentum (effective mass) is known.
+  ! INPUTS
+  ! * integer, intent(in) :: ID               ! ID of resonance
+  ! * integer, intent(in) :: charge           ! charge of resonance
+  ! * type(medium) :: media                   ! Medium at the point of the resonance
+  ! * real, intent(in) :: FourMomentum(0:3)   ! 4-momentum of resonance in the LRF
+  ! * real, intent(in) :: position(1:3)       ! position of resonance in calculation frame
+  ! RESULT
+  ! * resonance mass in GeV
+  ! NOTES
+  ! This was known as "detmass" in the old code.
+  !*****************************************************************************
+  real function resonanceMass (ID, charge, media, FourMomentum, position, perturbative)
+    use particleDefinition
+    use mediumDefinition
+    use baryonPotentialModule, only : baryonPotential
+    use coulomb, only: emfoca
+    use CallStack, only: traceback
+
+    integer, intent(in) :: ID, charge
+    type(medium) :: media
+    real, intent(in) :: FourMomentum(0:3), position(1:3)
+    logical, intent(in) :: perturbative
+
+    type(particle) :: resonance
+    real :: potLRF
+
+    ! determine hadronic potential
+    If (media%useMedium) then
+      resonance%position = position
+      resonance%perturbative = perturbative
+      resonance%charge = charge
+      resonance%Id = ID
+      resonance%momentum(0:3) = FOURmomentum(0:3)
+      potLRF = BaryonPotential (resonance, media, .false.)
+    else
+      potLRF = 0.
+    end if
+
+    ! add Coulomb potential
+    potLRF = potLRF + emfoca (position, FourMomentum(1:3), charge, ID)
+
+    ! evaluate the 'bare' mass of the resonance in the LRF
+    resonanceMass = sqrt( (FourMomentum(0)-potLRF)**2 - sum(FourMomentum(1:3)**2) )
+
+  end function resonanceMass
+
+
   !*************************************************************************
   !****f* resonanceCrossSections/barMes2resonance
   ! NAME
@@ -91,7 +145,6 @@ contains
     use baryonWidthMedium, only: WidthBaryonMedium, partialWidthBaryonMedium
     use particleProperties, only: hadron, isNonExotic
     use ClebschGordan, only: clebschSquared
-    use twoBodyTools, only : resonanceMass
     use constants, only: pi, GeVSquared_times_mb
     use IdTable, only: Delta, nbar, isMeson, isBaryon
     use RMF, only : getRMF_flag
@@ -172,8 +225,9 @@ contains
        ! Evaluate mass of the resonance and store it
        chargeRes=chargeMeson_ini+chargeBaryon_ini
        if (.not. getRMF_flag()) then
-         masses(resID)=resonanceMass(resID,chargeRes,mediumAtcollision,momentumLRF,position,perturbative)
-       else if( present(srts) ) then
+         masses(resID) = resonanceMass (resID, chargeRes, mediumAtcollision, momentumLRF, position, perturbative)
+         if (.not. masses(resID)>0.) cycle   ! this can happen if the potential gets too strong
+       else if (present(srts)) then
          masses(resID)=srts
        else
          write(*,*)' In barMes2resonance: srts must present in RMF mode !!!'
@@ -267,7 +321,6 @@ contains
 
     use baryonWidthMedium, only: WidthBaryonMedium, partialWidthBaryonMedium
     use mediumDefinition, only: medium, vacuum
-    use twoBodyTools, only : resonanceMass
     use particleProperties, only: hadron, isNonExotic
     use ClebschGordan, only: clebschSquared
     use constants, only: pi, GeVSquared_times_mb
@@ -349,8 +402,9 @@ contains
 
     ! Loop over intermediate resonances R : m B->  R -> m' B'
     Do resId=1,nbar
-       if( .not.getRMF_flag() ) then
-         massRes=resonanceMass(resID,chargeRes,mediumAtcollision,momentumLRF,position,perturbative)
+       if (.not. getRMF_flag()) then
+         massRes = resonanceMass (resID, chargeRes, mediumAtcollision, momentumLRF, position, perturbative)
+         if (.not. massRes>0.) cycle   ! this can happen if the potential gets too strong
        else if( present(srts) ) then
          massres=srts
        else

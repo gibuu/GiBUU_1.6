@@ -1,17 +1,18 @@
-!***************************************************************************
+!*******************************************************************************
 !****m* /twoBodyTools
 ! NAME
 ! module twoBodyTools
 ! PURPOSE
 ! This module contains some auxiliary routines for two-body collisions.
-!***************************************************************************
+!*******************************************************************************
 module twoBodyTools
 
   implicit none
   private
 
-  public :: sqrtS_free,resonanceMass,ranCharge,get_pInitial,velocity_correction
-  public :: convertToAntiParticles,pCM,pCM_sqr,p_lab,searchInInput,MomentumTransfer2,IsChargeExchange
+  public :: sqrtS_free, pCM, pCM_sqr, p_lab
+  public :: convertToAntiParticles, ranCharge, get_pInitial, velocity_correction
+  public :: searchInInput, MomentumTransfer2, IsChargeExchange
 
 
   !*************************************************************************
@@ -43,8 +44,6 @@ module twoBodyTools
   Interface pCM
      Module Procedure pCM_1, pCM_2
   end Interface
-  
-
 
 
 contains
@@ -222,58 +221,6 @@ contains
     sqrtS_free=sqrt(teilchen(1)%mass**2+mom2) &
          &    +sqrt(teilchen(2)%mass**2+mom2)
   end function sqrtS_Free
-
-
-
-  !*************************************************************************
-  !****f* twoBodyTools/resonanceMass
-  ! PURPOSE
-  ! Determines the mass of a resonance, if its energy and momentum is known
-  ! INPUTS
-  ! * type(medium) :: media ! Medium at the point of the resonance
-  ! * integer, intent(in) :: ID ! ID of resonance
-  ! * integer, intent(in) :: charge ! charge of resonance
-  ! * real, intent(in), dimension (1:3) :: position ! position of resonance in calculation frame
-  ! * real, intent(in), dimension (0:3) :: momentum ! fourMomentum of resonance in the LRF
-  ! RESULT
-  ! * real resMas in Units of GeV
-  ! NOTES
-  ! This was in the old code known as "detmass"
-  !*************************************************************************
-
-  real function resonanceMass(ID,charge,media,FourMomentum,position,perturbative)
-    use particleDefinition
-    use mediumDefinition
-    use baryonPotentialModule, only : baryonPotential
-    use coulomb, only: emfoca
-    integer, intent(in) :: ID ! ID of resonance
-    integer, intent(in) :: charge ! charge of resonance
-    type(medium) :: media
-    real, intent(in), dimension (0:3) :: Fourmomentum ! fourMomentum of resonance in local-rest-frame
-    real, intent(in), dimension (1:3) :: position     ! position of the resonance
-    logical,  intent(in) :: perturbative
-    type(particle) :: resonance
-    real :: potLRF
-
-    If (media%useMedium) then
-      resonance%position = position
-      resonance%perturbative = perturbative
-      resonance%charge = charge
-      resonance%Id = ID
-      resonance%momentum(0:3) = FOURmomentum(0:3)
-      potLRF = BaryonPotential (resonance, media, .false.)
-    else
-      potLRF = 0.
-    end if
-
-    ! add Coulomb potential
-    potLRF = potLRF + emfoca (position, Fourmomentum(1:3), charge, ID)
-
-    ! evaluate the mass of the resonance in the LRF
-    resonanceMass = sqrt( (FourMomentum(0)-potLRF)**2 - sum(FourMomentum(1:3)**2) )
-
-  end function resonanceMass
-
 
 
   !*************************************************************************
