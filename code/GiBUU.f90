@@ -1,28 +1,18 @@
-!*****************************************************************************
-!****m* /GiBUU
+!*******************************************************************************
+!****p* /GiBUU
 ! NAME
 ! program GiBUU
 !
 ! PURPOSE
-! * This is the main file of the
-!   GIESSEN BOLTZMANN UEHLING UHLENBECK (GiBUU) code.
-! * Within this program all the initialization,
-!   the propagation & collision time steps
-!   and the analysis is performed.
+! This is the main file of the Giessen Boltzmann-Uehling-Uhlenbeck (GiBUU) code.
+! It steers the whole simulation, including initialization, time evolution
+! (propagation & collisions) and analysis.
 !
 ! COPYRIGHT
-! * Justus-Liebig-Universitaet Giessen
-! * Institut fuer Theoretische Physik I, GiBUU group
+! (C) 2005-2014 The GiBUU Team (see full list of authors below)
 !
-! Postal adress:
-! * Heinrich-Buff-Ring 16
-! * D-35392 Giessen
-!
-! Telephone:
-! * Tel.: +49 (0)641 99-33322
-!
-! Email:
-! * gibuu@projects.hepforge.org
+! The GiBUU code is licensed under the GNU General Public License (GPL v2).
+! See accompanying LICENSE file or http://www.gnu.org/licenses/gpl-2.0.html.
 !
 ! AUTHOR
 ! Academic Supervisor:
@@ -42,13 +32,29 @@
 ! * Birger Steinmueller
 ! * Janus Weil
 !
-! Physics described in:
-! * O. Buss et al., Phys. Rept. 512 (2012) 1
+! Email:
+! * gibuu@projects.hepforge.org
+!
+! Postal address:
+! * Institut fuer Theoretische Physik I
+! * Justus-Liebig-Universitaet Giessen
+! * Heinrich-Buff-Ring 16
+! * D-35392 Giessen
+!
+! Telephone:
+! * +49 (0)641 99 33344
+!
+! SEE ALSO
+! The full physics included in the code is described in this review paper:
+! * O. Buss et al., Phys. Rept. 512 (2012) 1,
+!   http://inspirehep.net/record/912923
+! Additional information and documentation can be found on the website:
+! * https://gibuu.hepforge.org
 !
 ! BUGS
-! * Please report bugs and suggestions for improvements
-!   to gibuu@projects.hepforge.org .
-!*****************************************************************************
+! Please report bugs and suggestions for improvements to
+! gibuu@projects.hepforge.org.
+!*******************************************************************************
 program GiBUU
 
   use output, only: header, chapter, subchapter, DoPR, timeMeasurement, printTime, writeParticleVector
