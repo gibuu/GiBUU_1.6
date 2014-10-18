@@ -153,15 +153,15 @@ contains
     use nucleus, only: getTarget
     use inputGeneral, only : eventType
     use eventTypes, only : elementary
-    use densityModule, only: gridPoints
+    use densityModule, only: getGridPoints
 
-    integer :: ios
+    integer :: ios, gridPoints(1:3)
     type(tNucleus),pointer::target
 
     !***************************************************************************
     !****n* Coulomb/coulomb
     ! NAME
-    ! NAMELIST /coulomb/ 
+    ! NAMELIST /coulomb/
     ! PURPOSE
     ! Includes the switches:
     ! * coulombFlag
@@ -211,21 +211,22 @@ contains
        write(*,*) 
     end if
 
-
     if (magnetFieldFlag) kmax = 3 ! see above !!!!!
 
+    ! allocate fields
+    gridPoints = getGridPoints()
 
-    Allocate(coulombField(-gridPoints(1):gridPoints(1), & 
-         &  -gridPoints(2):gridPoints(2),&
-         &  -gridPoints(3):gridPoints(3),0:kmax))
+    Allocate(coulombField(-gridPoints(1):gridPoints(1), &
+                          -gridPoints(2):gridPoints(2), &
+                          -gridPoints(3):gridPoints(3), 0:kmax))
 
-    Allocate(K_ADI(-gridPoints(1):gridPoints(1), & 
-         & -gridPoints(2):gridPoints(2),&
-         &  -gridPoints(3):gridPoints(3)))
+    Allocate(K_ADI(-gridPoints(1):gridPoints(1), &
+                   -gridPoints(2):gridPoints(2), &
+                   -gridPoints(3):gridPoints(3)))
 
-    Allocate(U_ADI(-gridPoints(1):gridPoints(1), & 
-         & -gridPoints(2):gridPoints(2),&
-         &  -gridPoints(3):gridPoints(3)))
+    Allocate(U_ADI(-gridPoints(1):gridPoints(1), &
+                   -gridPoints(2):gridPoints(2), &
+                   -gridPoints(3):gridPoints(3)))
 
   end subroutine initCoulombReading
 
