@@ -286,7 +286,11 @@ contains
 !    write(*,*) '...particles inserted: ',nPart
 
     p11 => PartVec(1,1)
-    p21 => PartVec(2,1)
+    if (Size(PartVec,dim=1)>1) then
+      p21 => PartVec(2,1)
+    else
+      p21 => PartVec(1,1) ! dummy value
+    end if
     p12 => PartVec(1,2)
 
     if (DoPR(1)) write(*,*) 'VolumeElements_SETUP_Pert: particles inserted: ',nPart
@@ -618,7 +622,11 @@ contains
     nRealPart = tVE%VE_real(iPart(1),iPart(2),iPart(3))%nEntries
 
     j2  =int( (LOCcmd(Part2)-LOCcmd(p11))/(LOCcmd(p12)-LOCcmd(p11)))
-    iEns=int( (LOCcmd(Part2)-LOCcmd(p11)-j2*(LOCcmd(p12)-LOCcmd(p11)))/(LOCcmd(p21)-LOCcmd(p11)) )+1
+    if (LOCcmd(p21) == LOCcmd(p11)) then
+      iEns = 1
+    else
+      iEns = int((LOCcmd(Part2)-LOCcmd(p11)-j2*(LOCcmd(p12)-LOCcmd(p11)))/(LOCcmd(p21)-LOCcmd(p11))) + 1
+    end if
     iInd=j2+1
 
     pPert => pPert%next

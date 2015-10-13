@@ -1448,7 +1448,7 @@ contains
 !    real,parameter :: ymax=41.6
     character(100) :: fileName
     integer :: status
-    real, dimension(53) :: enu, flux
+    real, dimension(53), save :: enu, flux
     integer :: j, j0
     real:: enumax, enumin, ymax, z
 
