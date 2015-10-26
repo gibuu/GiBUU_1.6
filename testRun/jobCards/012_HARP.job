@@ -1,6 +1,9 @@
 !-------------------------------------------------- -*- fortran -*- ----
-! sample jobcard for high energy pion induced reactions on Nucleus
-! suitable for HARP and NA61/SHINE calculations
+! Sample jobcard for high-energy pion- and proton-induced reactions on nuclei,
+! suitable for HARP and NA61/SHINE calculations.
+! Variants of this jobcard have been used for the following publications:
+! * http://inspirehep.net/record/810890
+! * http://inspirehep.net/record/1397003
 !-----------------------------------------------------------------------
 ! please visit the GiBUU homepage for further information:
 ! https://gibuu.hepforge.org
@@ -56,6 +59,7 @@
 !      p_lab = 5.0 ! momentum of projectile [GeV/c]
 !      p_lab = 8.0 ! momentum of projectile [GeV/c]
 !      p_lab =12.0 ! momentum of projectile [GeV/c]
+!      p_lab =31.0 ! momentum of projectile [GeV/c]
 
       doPerturbativeInit = T    ! T: collision happens at time=0
       DoOnlyOne       = T       ! T: no ping-ping-ping...
