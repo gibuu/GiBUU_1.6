@@ -1863,7 +1863,8 @@ contains
     character(80) :: filename_Enu, filename_E,filename_cos,filename_Q2
     character(13) :: name
     real :: enu,  ekin, costheta, Q2, perweight
-    real, dimension(0:3) :: lepIn_mom, lep_mom, boson_mom
+    real, dimension(0:3) :: lepIn_mom, lep_mom, boson_mom, nuc_mom
+    integer :: Chrg_Nuc
     logical ::  makeInitHists, pass
 
     logical :: makeOutput,sameFileName
@@ -1938,7 +1939,7 @@ contains
        end if
 
        if (pass) then
-          if(.not.neutrinoProdInfo_Get(j,prod_id,perweight,lepIn_mom,lep_mom,boson_mom)) then
+          if(.not.neutrinoProdInfo_Get(j,prod_id,perweight,lepIn_mom,lep_mom,boson_mom,nuc_mom,Chrg_Nuc)) then
              write(*,*) 'error in getting perweight, stop'
              write(*,*) j,prod_id,perweight
              stop
@@ -2146,9 +2147,9 @@ contains
     character(30),parameter :: out='(4I7,8E14.6,2I9,E14.6)'
     character(30),parameter :: outShort='(4I7,8E14.6,2I9)'
     character(35),parameter :: outA='("#",A6,3A9,8A16,A15,A18,A8)'
-    integer :: i,prod_ID
+    integer :: i,prod_ID, Chrg_Nuc
     real :: perweight, enu
-    real, dimension(0:3) :: lepIn_mom, lepton_mom, boson_mom
+    real, dimension(0:3) :: lepIn_mom, lepton_mom, boson_mom, nuc_mom
     logical :: newline,onlyFree,printParticle,ex,NeutrinoProdID
 
     if(present(onlyFreeParticles)) then
@@ -2192,7 +2193,7 @@ contains
           end if
 
           if(NeutrinoProdID) then
-             if(.not.neutrinoProdInfo_Get(i,prod_id,perweight,lepIn_mom,lepton_mom,boson_mom)) then
+             if(.not.neutrinoProdInfo_Get(i,prod_id,perweight,lepIn_mom,lepton_mom,boson_mom,nuc_mom,Chrg_Nuc)) then
                 write(*,*) 'error in getting production info in event_dump, stop'
                 stop
              end if
@@ -2728,7 +2729,8 @@ contains
     type(tParticleListNode),Pointer       :: pNode
     integer :: prod_id
     real    :: Ehad, perweight
-    real, dimension(0:3) :: lepIn_mom, lep_mom, boson_mom
+    real, dimension(0:3) :: lepIn_mom, lep_mom, boson_mom, nuc_mom
+    integer :: Chrg_Nuc
     integer :: i, iHist
     integer, save :: numRuns
 
@@ -2771,7 +2773,7 @@ contains
 
        ! (1) Collect informations about boson in event "i"
        ! event:  prod_ID (1 to 34) , perweight, outgoing lepton and intermediate boson momenta
-       if(.not.neutrinoProdInfo_Get(i,prod_id,perweight,lepIn_mom,lep_mom,boson_mom)) then
+       if(.not.neutrinoProdInfo_Get(i,prod_id,perweight,lepIn_mom,lep_mom,boson_mom,nuc_mom,Chrg_Nuc)) then
           write(*,*) 'error in getting production info, stop'
           stop
        end if

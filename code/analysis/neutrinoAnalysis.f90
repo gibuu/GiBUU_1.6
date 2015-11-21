@@ -1086,7 +1086,7 @@ contains
     type(particle)         , POINTER :: particlePointer
     integer :: i,j,first
 
-    type(particle), Allocatable, dimension(:),target :: lepton
+    type(particle), Allocatable, dimension(:),target :: lepton, struckNuc
 
     integer, parameter :: max_generation=3
     integer :: generation, prod_id
@@ -1157,7 +1157,8 @@ contains
     type(histogram2D), save :: H_enu_rec_versus_real(1:max_speEvent,0:max_Hist)
 
     real :: Enureal, Enurec, Q2real, Q2rec, dummy, perweight
-    real, dimension(0:3) :: lepIn_mom, lep_mom, boson_mom ! momenta of the ingoing and outgoing lepton and intermediate boson
+    real, dimension(0:3) :: lepIn_mom, lep_mom, boson_mom, nuc_mom ! momenta of the ingoing and outgoing lepton and intermediate boson
+    integer :: Chrg_Nuc
     integer :: m,iHist
 
 
@@ -1721,7 +1722,7 @@ contains
           if(bound(particles(i,j))) cycle
           if(below_threshold(particles(i,j))) cycle
 
-          if(.not.neutrinoProdInfo_Get(Particles(i,j)%firstEvent,prod_id,dummy,lepIn_mom,lep_mom,boson_mom)) then
+          if(.not.neutrinoProdInfo_Get(Particles(i,j)%firstEvent,prod_id,dummy,lepIn_mom,lep_mom,boson_mom, nuc_mom, Chrg_Nuc)) then
              write(*,*) 'error in getting production info, stop'
              stop
           end if
@@ -1875,7 +1876,10 @@ contains
     write(*,*) 'firstevent range: ', firstevents
 
     Allocate(lepton(firstEvents(1):firstEvents(2)))
+    Allocate(struckNuc(firstEvents(1):firstEvents(2)))
+
     call setToDefault(lepton)
+    call setToDefault(struckNuc)
 
     Allocate(Events(firstEvents(1):firstEvents(2)))
     Allocate(Events_QE(firstEvents(1):firstEvents(2)))
@@ -1909,7 +1913,8 @@ contains
     do i=firstEvents(1),firstEvents(2)
        lepton(i)%firstEvent=i
        call get_init_namelist(outLepton_ID=lepton(i)%ID, outLepton_charge=lepton(i)%charge)
-       if(.not.neutrinoProdInfo_Get(i, prod_id, lepton(i)%perweight,lepIn_mom,lepton(i)%momentum,boson_mom)) then
+       if (.not.neutrinoProdInfo_Get(i, prod_id, lepton(i)%perweight,lepIn_mom,lepton(i)%momentum, boson_mom, &
+                                     struckNuc(i)%momentum,struckNuc(i)%charge)) then
           write(*,*) 'error in getting perweight, stop, lepton'
           stop
        end if
@@ -1922,6 +1927,10 @@ contains
 
        call event_add(events(i),particlePointer)
 
+       particlePointer=>struckNuc(i)
+       struckNuc(i)%ID=1
+
+       call event_add(events(i),particlePointer)
 
        select case (prod_id)
        case(1)
@@ -1971,7 +1980,7 @@ contains
 
           !apply history information
           generation=history_getGeneration(Particles(i,j)%history)
-          if(.not.neutrinoProdInfo_Get(Particles(i,j)%firstEvent,prod_id,dummy,lepIn_mom,lep_mom,boson_mom)) then
+          if(.not.neutrinoProdInfo_Get(Particles(i,j)%firstEvent,prod_id,dummy,lepIn_mom,lep_mom,boson_mom,nuc_mom, Chrg_Nuc)) then
              write(*,*) 'error in getting production info, stop'
              stop
           end if
@@ -2844,7 +2853,7 @@ contains
     if(reconstruct_neutrino_energy .and. specificEvent_Analysis) then
 
     do j=lBound(events,dim=1),uBound(events,dim=1)
-          if(.not.neutrinoProdInfo_Get(j,prod_id,perweight,lepIn_mom,lep_mom,boson_mom)) then
+          if(.not.neutrinoProdInfo_Get(j,prod_id,perweight,lepIn_mom,lep_mom,boson_mom,nuc_mom, Chrg_Nuc)) then
              write(*,*) 'error in getting perweight, stop'
              write(*,*) j,prod_id,perweight
              stop

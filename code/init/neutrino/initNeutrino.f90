@@ -681,7 +681,6 @@ contains
 
           sigma=0.
 
-
           if (MCmode) call SetXsecMC(eNev1,flux_enu,nuXsectionMode)
 
           !          call write_electronNucleon_event(eNev1)
@@ -843,7 +842,9 @@ contains
           call neutrinoProdInfo_Store(firstEvent, k, fak1,&
                eNev(k)%lepton_in%momentum,&
                eNev(k)%lepton_out%momentum,&
-               eNev(k)%boson%momentum)
+               eNev(k)%boson%momentum,&
+               eNev(k)%nucleon_free%momentum,&
+               eNev(k)%nucleon_free%charge)
 
           iHist = K2Hist(k)
 

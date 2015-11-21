@@ -469,7 +469,8 @@ contains
 
     real :: weight,nu,Q2,eps,phiL
     integer :: evtType
-    real,dimension(0:3) :: momLepIn, momLepOut, momBos
+    real,dimension(0:3) :: momLepIn, momLepOut, momBos, nuc_mom
+    integer :: Chrg_Nuc
 
     select case (eventType)
     case (heavyIon)
@@ -478,8 +479,8 @@ contains
       write(iFile,'(A,ES13.4)') '# 300 ', b_had
     case (neutrino)
       if (.not. present(iFE)) return
-      if (NeutrinoProdInfo_Get (iFE,evtType,Weight,momLepIn,momLepOut,momBos)) &
-        write(iFile,'(A,I5,1P,e18.10,1P,2(" ",4e18.10),0P)') '# 5 ', evtType, Weight, momLepIn, momLepOut
+      if (NeutrinoProdInfo_Get (iFE,evtType,Weight,momLepIn,momLepOut,momBos,nuc_mom, Chrg_Nuc)) &
+        write(iFile,'(A,I5,1P,e18.10,1P,3(" ",4e18.10),0P,A)') '# 5 ', evtType, Weight, momLepIn, momLepOut, nuc_mom
     case (hiLepton)
       if (.not. present(iFE)) return
       if (EventInfo_HiLep_Get (0,iFE,Weight,nu,Q2,eps,evtType,phi_Lepton=phiL)) &
