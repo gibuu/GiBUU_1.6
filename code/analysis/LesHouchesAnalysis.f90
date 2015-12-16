@@ -445,9 +445,9 @@ contains
   ! The following cases are handled:
   ! * For eventtype "HiLep", the following line is added:
   !     # 14 nu Q2 eps phiLepton Eventtype
-  !   (14 is the magic number of "HiLepton") 
+  !   (14 is the magic number of "HiLepton")
   ! * For eventtype "neutrino", the following line is added:
-  !     # 5 Eventtype Weight  momLepIn(0:3) momLepOut(0:3)
+  !     # 5 Eventtype Weight momLepIn(0:3) momLepOut(0:3) nuc_mom(0:3)
   !   (5 is the magic number for neutrino events)
   ! * For eventtype "heavyIon", the following line is added:
   !     # 1 b
